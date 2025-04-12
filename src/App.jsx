@@ -1,23 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTasks from "./components/AddTasks";
 import Tasks from "./components/Tasks";
 import { v4 } from "uuid";
 
 function App() {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Estudar programação",
-      description: "Estudar programação para se tornar um dev",
-      isCompleted: false,
-    },
-    {
-      id: 2,
-      title: "Estudar inglês",
-      description: "Estudar inglês bla bla bla",
-      isCompleted: false,
-    },
-  ]);
+  const [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || []
+  );
+
+  // Função que executa alguma ação toda vez que a lista for alterada
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  // FUNÇÃO SÓ SERÁ CHAMADA QUANDO O USUÁRIO ACESSAR A APLICAÇÃO PELA PRIMEIRA VEZ, ISSO OCORRE POR CONTA DO SEGUNDO PARÂMETRO SER UMA LISTA VAZIA
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  //     // CHAMAR A API
+  //     const response = await fetch(
+  //       "https://jsonplaceholder.typicode.com/todos?_limit=10",
+  //       { method: "GET" }
+  //     );
+  //     // PEGAR OS DADOS QUE ELA  RETORNA
+  //     const data = await response.json();
+  //     // ARMAZENAR / PERSISTIR OS DADOS NO STATE
+  //     setTasks(data)
+  //   };
+  //   fetchTasks();
+  // }, []);
 
   function onTaskClick(taskId) {
     const newTasks = tasks.map((task) => {
